@@ -6,6 +6,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,12 +41,13 @@ public class StudentController {
       return ResponseEntity.ok(foundStudent);
 }
     @DeleteMapping("{id}")
-    public Student deleteStudent(@PathVariable long id){
-        return studentService.deleteStudent(id);
+    public void deleteStudent(@PathVariable long id){
+        studentService.deleteStudent(id);
+
     }
     @GetMapping
-    public ResponseEntity<Collection<Student>> filterAgeStudent(@RequestParam int ageStudent){
-        return ResponseEntity.ok(studentService.getAllStudent().stream().filter(student -> student.getAge()==ageStudent).collect(Collectors.toList()));
+    public ResponseEntity<Collection<Student>> findByAge(@RequestParam int ageStudent){
+        return ResponseEntity.ok(studentService.findByAge(ageStudent));
 
     }
 }
