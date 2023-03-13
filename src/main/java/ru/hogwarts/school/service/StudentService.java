@@ -56,6 +56,9 @@ public class StudentService {
         Faculty faculty = facultyRepository.findById(getStudentById(id).getFaculty()).get();
         return FacultyDTO.fromFaculty(faculty);
     }
+    public Student findStudentById(Long id) {
+        return studentRepository.findById(id).get();
+    }
 
 }
 
