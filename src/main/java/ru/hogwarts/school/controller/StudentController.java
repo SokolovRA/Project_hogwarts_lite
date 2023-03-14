@@ -63,14 +63,21 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<StudentDTO>> getStudents(@RequestParam(required = false) Integer ageStudent, @RequestParam(required = false) Integer minAge, @RequestParam(required = false) Integer maxAge) {
+    public ResponseEntity<Collection<StudentDTO>> getStudents(@RequestParam(required = false) Integer ageStudent,
+                                                              @RequestParam(required = false) Integer minAge,
+                                                              @RequestParam(required = false) Integer maxAge,
+                                                              @RequestParam("page") Integer pageNumber,
+                                                              @RequestParam("size") Integer pageSize) {
         if (ageStudent != null) {
             return ResponseEntity.ok(studentService.findByAge(ageStudent));
         }
         if (minAge != null && maxAge != null) {
             return ResponseEntity.ok(studentService.sortedAgeStudent(minAge, maxAge));
         }
-        return ResponseEntity.ok(studentService.findAllStudets());
+        if (pageSize <= 0 || pageSize > 50) {
+            return ResponseEntity.ok(studentService.findAllStudets(pageNumber, 50));
+        }
+        return ResponseEntity.ok(studentService.findAllStudets(pageNumber, pageSize));
     }
 
     @GetMapping("{studentId}/faculty")
@@ -107,6 +114,18 @@ public class StudentController {
             response.setContentLength((int) studentAvatar.getFileSize());
             is.transferTo(os);
         }
+    }
+    @GetMapping("/numberOfStudents")
+    public ResponseEntity<Long> numberOfStudents(){
+        return ResponseEntity.ok(studentService.getNumberOfStudents());
+    }
+    @GetMapping("/sorted/studentsByAverageAge")
+    public ResponseEntity<Long> sortingStudentsByAverageAge(){
+        return ResponseEntity.ok(studentService.getSortingStudentsByAverageAge());
+    }
+    @GetMapping("/sorted/studentByMinAge")
+    public ResponseEntity<Collection<StudentDTO>> sortingStudentByMinAge(){
+        return ResponseEntity.ok(studentService.getSortingStudentByMinAge());
     }
 }
 

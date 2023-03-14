@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.dto.FacultyDTO;
 import ru.hogwarts.school.dto.StudentDTO;
@@ -10,7 +11,6 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,8 +46,9 @@ public class StudentService {
     public Collection<StudentDTO> findByAge(Integer age){
         return studentRepository.findAllByAge(age).stream().map(StudentDTO::fromStudent).collect(Collectors.toList());
     }
-    public Collection<StudentDTO> findAllStudets() {
-        return studentRepository.findAll().stream().map(StudentDTO::fromStudent).collect(Collectors.toList());
+    public Collection<StudentDTO> findAllStudets(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest =PageRequest.of(pageNumber-1,pageSize);
+        return studentRepository.findAll(pageRequest).getContent().stream().map(StudentDTO::fromStudent).collect(Collectors.toList());
     }
     public Collection<StudentDTO> sortedAgeStudent(Integer minAge,Integer maxAge){
         return studentRepository.findByAgeBetween(minAge,maxAge).stream().map(StudentDTO::fromStudent).collect(Collectors.toList());
@@ -59,6 +60,14 @@ public class StudentService {
     public Student findStudentById(Long id) {
         return studentRepository.findById(id).get();
     }
-
+    public Long getNumberOfStudents(){
+       return studentRepository.numberOfStudents();
+    }
+    public Long getSortingStudentsByAverageAge(){
+        return studentRepository.sortingStudentsByAverageAge();
+    }
+    public Collection<StudentDTO> getSortingStudentByMinAge(){
+        return studentRepository.sortingStudentByMinAge().stream().map(StudentDTO::fromStudent).collect(Collectors.toList());
+    }
 }
 
