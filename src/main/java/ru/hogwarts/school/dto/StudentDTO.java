@@ -12,7 +12,7 @@ public class StudentDTO {
     private Long id;
     private String name;
     private Integer age;
-    private Long faculty;
+    private Long facultyId;
 
 
     public static StudentDTO fromStudent(Student student) {
@@ -20,7 +20,7 @@ public class StudentDTO {
         dto.setId(student.getId());
         dto.setName(student.getName());
         dto.setAge(student.getAge());
-        dto.setFaculty(student.getFaculty().getId());
+        dto.setFacultyId(student.getFaculty().getId());
         return dto;
     }
 

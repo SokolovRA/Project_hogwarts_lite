@@ -28,7 +28,9 @@ public class StudentService {
     }
 
     public StudentDTO createStudent(StudentDTO studentDTO){
+        Faculty faculty = facultyRepository.findById(studentDTO.getFacultyId()).get();
         Student student = studentDTO.toStudent();
+        student.setFaculty(faculty);
         Student studentCreated = studentRepository.save(student);
         return StudentDTO.fromStudent(studentCreated);
     }
@@ -54,7 +56,7 @@ public class StudentService {
         return studentRepository.findByAgeBetween(minAge,maxAge).stream().map(StudentDTO::fromStudent).collect(Collectors.toList());
     }
     public FacultyDTO getFacultyByStudentId(Long id) {
-        Faculty faculty = facultyRepository.findById(getStudentById(id).getFaculty()).get();
+        Faculty faculty = facultyRepository.findById(getStudentById(id).getFacultyId()).get();
         return FacultyDTO.fromFaculty(faculty);
     }
     public Student findStudentById(Long id) {
