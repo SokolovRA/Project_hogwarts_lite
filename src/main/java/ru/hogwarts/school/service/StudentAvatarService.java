@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
-
+@Slf4j
 @Service
 @Transactional
 public class StudentAvatarService {
@@ -32,8 +33,8 @@ public class StudentAvatarService {
     }
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException{
-       Student student = studentService.findStudentById(studentId);
-
+        log.info("Was invoked method for uploadAvatar student: " +  studentId);
+        Student student = studentService.findStudentById(studentId);
         Path filePath = Path.of(avatarsDir,studentId+"."+ getExtension((file.getOriginalFilename())));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
@@ -52,9 +53,12 @@ public class StudentAvatarService {
         avatar.setData(generateImagePreview(filePath));
 
         studentAvatarRepository.save(avatar);
+        log.info("Avatar for student with id: "+studentId+" has been upload");
     }
     public StudentAvatar findAvatar(Long id){
+        log.info("Was invoked method for findAvatar student: " +  id);
         return studentAvatarRepository.findByStudentId(id).orElse(new StudentAvatar());
+
     }
     private byte[] generateImagePreview(Path filePath) throws IOException{
         try(InputStream is = Files.newInputStream(filePath);
