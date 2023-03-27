@@ -47,7 +47,7 @@ public class StudentController {
         return ResponseEntity.ok(studentCreated);
     }
 
-    @PatchMapping
+    @PutMapping
     public ResponseEntity<StudentDTO> updateStudent(@RequestBody StudentDTO studentDTO) {
         StudentDTO updatedStudent = studentService.updateStudent(studentDTO);
         if (updatedStudent == null) {
@@ -66,8 +66,8 @@ public class StudentController {
     public ResponseEntity<Collection<StudentDTO>> getStudents(@RequestParam(required = false) Integer ageStudent,
                                                               @RequestParam(required = false) Integer minAge,
                                                               @RequestParam(required = false) Integer maxAge,
-                                                              @RequestParam("page") Integer pageNumber,
-                                                              @RequestParam("size") Integer pageSize) {
+                                                              @RequestParam Integer pageNumber,
+                                                              @RequestParam Integer pageSize) {
         if (ageStudent != null) {
             return ResponseEntity.ok(studentService.findByAge(ageStudent));
         }

@@ -19,6 +19,7 @@ public class StudentAvatar {
     private String mediaType;
 
     @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] data;
     @OneToOne
     private Student student;

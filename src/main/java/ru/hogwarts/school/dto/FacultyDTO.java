@@ -14,8 +14,6 @@ public class FacultyDTO {
     private String color;
 
 
-
-
     public static FacultyDTO fromFaculty(Faculty faculty) {
         FacultyDTO dto = new FacultyDTO();
         dto.setId(faculty.getId());

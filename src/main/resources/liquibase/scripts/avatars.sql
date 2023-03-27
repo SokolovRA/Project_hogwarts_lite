@@ -2,7 +2,7 @@
 --changeset romansokolov:1
 create table student_avatar (
       id BIGSERIAL NOT NULL PRIMARY KEY ,
-      data OID NOT NULL,
+      data BYTEA,
       file_path VARCHAR(255) NOT NULL,
       file_size BIGINT,
       media_type VARCHAR(255),

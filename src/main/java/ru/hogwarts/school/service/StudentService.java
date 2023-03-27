@@ -44,9 +44,9 @@ public class StudentService {
     public StudentDTO updateStudent(StudentDTO studentDTO) {
         log.info("Was invoked method for update student");
         Student student = studentDTO.toStudent();
-        Student studentUpdated = studentRepository.save(student);
+        studentRepository.save(student);
         log.info("Student has been updated");
-        return StudentDTO.fromStudent(studentUpdated);
+        return studentDTO;
     }
     public void deleteStudent(Long id) {
         log.info("Was invoked method for delete student: " + id);
