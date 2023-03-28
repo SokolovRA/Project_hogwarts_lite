@@ -9,14 +9,20 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
+
+import javax.sql.DataSource;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
@@ -28,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StudentControllerTest {
+
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -51,15 +58,14 @@ public class StudentControllerTest {
         studentRepository.save(student);
 
 
-        jsonObject.put("name", "Sedrik");
-        jsonObject.put("age", 18);
-        jsonObject.put("facultyId", faculty.getId());
-
-
     }
 
     @Test
     void testCreateStudent() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
+
         mockMvc.perform(post("/students")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonObject.toString()))
@@ -80,34 +86,39 @@ public class StudentControllerTest {
 
     @Test
     void testUpdateStudent() throws Exception {
-            jsonObject.put("id",2);
-            mockMvc.perform(put("/students")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(jsonObject.toString()))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.id").isNotEmpty())
-                    .andExpect(jsonPath("$.id").isNumber())
-                    .andExpect(jsonPath("$.name").value("Sedrik"))
-                    .andExpect(jsonPath("$.age").value(18))
-                    .andExpect(jsonPath("$.facultyId").value(faculty.getId()));
+        jsonObject.put("id", 1);
+        jsonObject.put("name", "Ron");
+        jsonObject.put("age", 22);
+        jsonObject.put("facultyId", faculty.getId());
 
-//            mockMvc.perform(get("/students"))
-//                    .andExpect(status().isOk())
-//                    .andExpect(jsonPath("$").isArray())
-//                    .andExpect(jsonPath("$.length()").value(2))
-//                    .andExpect(jsonPath("$[1].name").value("Sedrik"))
-//                    .andExpect(jsonPath("$[1].age").value(18))
-//                    .andExpect(jsonPath("$[1].facultyId").value(faculty.getId()));
-        }
+        mockMvc.perform(put("/students")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonObject.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("Ron"))
+                .andExpect(jsonPath("$.age").value(22))
+                .andExpect(jsonPath("$.facultyId").value(faculty.getId()));
+
+    }
 
     @Test
     void testUpdateStudentWhenStudentNotFoundReturnsBadRequest() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
+
         studentRepository.delete(student);
         mockMvc.perform(put("/students"))
                 .andExpect(status().isBadRequest());
     }
     @Test
     void testDeleteStudent() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
+
         mockMvc.perform(delete("/students/" + student.getId()))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/students?pageNumber=1&pageSize=2"))
@@ -117,6 +128,10 @@ public class StudentControllerTest {
     }
     @Test
     void testGetStudent() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
+
         mockMvc.perform(get("/students/" + student.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Germiona"))
@@ -125,12 +140,19 @@ public class StudentControllerTest {
     }
     @Test
     void testGetStudentsGetsListOfStudents() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
+
         mockMvc.perform(get("/students?pageNumber=1&pageSize=2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
     @Test
     void testGetStudentsReturnsStudentsByMinAge() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
 
         mockMvc.perform(get("/students/sorted/studentByMinAge"))
                 .andExpect(status().isOk())
@@ -140,6 +162,9 @@ public class StudentControllerTest {
     }
     @Test
     void testGetFacultyByStudentIdReturnsFaculty() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
 
         mockMvc.perform(get("/students/" + student.getId() + "/faculty"))
                 .andExpect(status().isOk())
@@ -150,6 +175,9 @@ public class StudentControllerTest {
 
     @Test
     void testGetTotalStudentCountReturnsNumberOfStudents() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
 
         when(Mockito.mock(StudentRepository.class).numberOfStudents()).thenReturn(1L);
         mockMvc.perform(get("/students/numberOfStudents"))
@@ -159,6 +187,10 @@ public class StudentControllerTest {
 
     @Test
     void testGetAverageAgeReturnsStudentsByAverageAge() throws Exception {
+        jsonObject.put("name", "Sedrik");
+        jsonObject.put("age", 18);
+        jsonObject.put("facultyId", faculty.getId());
+
         mockMvc.perform(get("/students/sorted/studentsByAverageAge"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(studentRepository.sortingStudentsByAverageAge().toString()));
