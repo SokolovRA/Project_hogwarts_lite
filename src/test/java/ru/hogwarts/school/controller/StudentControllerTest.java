@@ -57,6 +57,9 @@ public class StudentControllerTest {
         student.setFaculty(faculty);
         studentRepository.save(student);
 
+        jsonObject.put("name","Vadim");
+        jsonObject.put("age",38);
+        jsonObject.put("facultyId",faculty.getId());
 
     }
 
@@ -86,10 +89,10 @@ public class StudentControllerTest {
 
     @Test
     void testUpdateStudent() throws Exception {
-        jsonObject.put("id", 1);
+
         jsonObject.put("name", "Ron");
         jsonObject.put("age", 22);
-        jsonObject.put("facultyId", faculty.getId());
+
 
         mockMvc.perform(put("/students")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -100,6 +103,14 @@ public class StudentControllerTest {
                 .andExpect(jsonPath("$.name").value("Ron"))
                 .andExpect(jsonPath("$.age").value(22))
                 .andExpect(jsonPath("$.facultyId").value(faculty.getId()));
+
+        mockMvc.perform(get("/students?pageNumber=1&pageSize=10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[1].name").value("Ron"))
+                .andExpect(jsonPath("$[1].age").value(22))
+                .andExpect(jsonPath("$[1].facultyId").value(faculty.getId()));
 
     }
 
