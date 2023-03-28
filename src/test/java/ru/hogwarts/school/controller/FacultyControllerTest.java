@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.hogwarts.school.config.DockerConfig;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -28,7 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class FacultyControllerTest {
+@Testcontainers
+public class FacultyControllerTest extends DockerConfig {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -62,13 +65,15 @@ public class FacultyControllerTest {
         studentList.add(student2);
         faculty.setStudentsList(studentList);
 
-        jsonObject.put("name","Ravenclaw");
-        jsonObject.put("color","blue");
+
 
     }
 
     @Test
     void testСreateFaculty() throws Exception{
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
+
         mockMvc.perform(post("/faculties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonObject.toString()))
@@ -87,6 +92,8 @@ public class FacultyControllerTest {
     }
     @Test
     void testUpdateFaculty() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
 
         jsonObject.put("name", "Griffindor");
         jsonObject.put("color", "red");
@@ -110,6 +117,9 @@ public class FacultyControllerTest {
 
     @Test
     void testUpdateFacultyWhenFacultyNotFoundReturnsBadRequest() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
+
         studentRepository.deleteAll();
         faculty.setStudentsList(Collections.emptyList());
         facultyRepository.delete(faculty);
@@ -121,6 +131,9 @@ public class FacultyControllerTest {
 
     @Test
     void testDeleteFaculty() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
+
         studentRepository.deleteAll();
         mockMvc.perform(delete("/faculties/" + faculty.getId()))
                 .andExpect(status().isOk());
@@ -132,6 +145,8 @@ public class FacultyControllerTest {
 
     @Test
     void testGetFaculty() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
 
         mockMvc.perform(get("/faculties/" + faculty.getId()))
                 .andExpect(status().isOk())
@@ -141,6 +156,8 @@ public class FacultyControllerTest {
 
     @Test
     void testGetFacultiesGetsListOfFacultiesFromDatabase() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
 
         mockMvc.perform(get("/faculties"))
                 .andExpect(status().isOk())
@@ -149,6 +166,9 @@ public class FacultyControllerTest {
 
     @Test
     void testGetFacultiesByColor() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
+
         String color = "green";
         mockMvc.perform(get("/faculties?colorFaculty=" + color))
                 .andExpect(status().isOk())
@@ -159,6 +179,8 @@ public class FacultyControllerTest {
 
     @Test
     void testGetFacultiesByName() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
 
         mockMvc.perform(get("/faculties?nameFacylty=" + faculty.getName()))
                 .andExpect(status().isOk())
@@ -169,6 +191,8 @@ public class FacultyControllerTest {
 
     @Test
     void getAllStudentsByFacultyId() throws Exception {
+        jsonObject.put("name","Ravenclaw");
+        jsonObject.put("color","blue");
 
         mockMvc.perform(get("/faculties/" + faculty.getId() + "/students"))
                 .andExpect(status().isOk())
